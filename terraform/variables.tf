@@ -43,6 +43,7 @@ variable "region" {
   EOF
   default     = "australia-southeast1"
 }
+
 variable "zones" {
   description = ""
   default     = ["australia-southeast1-a", "australia-southeast1-b", "australia-southeast1-c"]
