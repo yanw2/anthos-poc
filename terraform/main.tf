@@ -17,10 +17,10 @@ limitations under the License.
 terraform {
   required_providers {
     google = {
-      version = "2.20.3"
+      version = "~> 2.20.0"
     }
     google-beta = {
-      version = "2.20.3"
+      version = "~> 2.20.0"
     }
   }
 }
@@ -69,9 +69,9 @@ resource "google_container_cluster" "cluster" {
   addons_config {
     // Disable the Kubernetes dashboard, which is often an attack vector. The
     // cluster can still be managed via the GKE UI.
-    // kubernetes_dashboard {
-    //  disabled = true
-    // }
+    kubernetes_dashboard {
+      disabled = true
+    }
 
     // Enable network policy (Calico)
     network_policy_config {
