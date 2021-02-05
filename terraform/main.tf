@@ -69,9 +69,9 @@ resource "google_container_cluster" "cluster" {
   addons_config {
     // Disable the Kubernetes dashboard, which is often an attack vector. The
     // cluster can still be managed via the GKE UI.
-    kubernetes_dashboard {
-      disabled = true
-    }
+    // kubernetes_dashboard {
+    //   disabled = true
+    // }
 
     // Enable network policy (Calico)
     network_policy_config {
