@@ -67,12 +67,6 @@ resource "google_container_cluster" "cluster" {
 
   // Configure various addons
   addons_config {
-    // Disable the Kubernetes dashboard, which is often an attack vector. The
-    // cluster can still be managed via the GKE UI.
-    kubernetes_dashboard {
-      disabled = true
-    }
-
     // Enable network policy (Calico)
     network_policy_config {
       disabled = false
@@ -137,13 +131,13 @@ resource "google_container_cluster" "cluster" {
   }
 
   // Specify the list of CIDRs which can access the master's API
-
   master_authorized_networks_config {
     cidr_blocks {
       cidr_block   = "10.0.0.0/8"
       display_name = "10/8 IPs"
     }
   }
+
   // Configure the cluster to have private nodes and private control plane access only
   private_cluster_config {
     enable_private_endpoint = "true"
@@ -176,7 +170,6 @@ resource "google_container_node_pool" "my-node-pool-np" {
   cluster    = google_container_cluster.cluster.name
   node_count = "1"
 
-
   max_pods_per_node = 64
 
   autoscaling {
@@ -196,6 +189,7 @@ resource "google_container_node_pool" "my-node-pool-np" {
     image_type      = "COS"
     preemptible     = "true"
     local_ssd_count = 0
+
     // Use the cluster created service account for this node pool
     service_account = google_service_account.gke-sa.email
 
@@ -208,8 +202,6 @@ resource "google_container_node_pool" "my-node-pool-np" {
       "https://www.googleapis.com/auth/trace.append",
     ]
 
-
-
     labels = {
       l1    = "v1"
       l2    = "v2"
@@ -220,6 +212,7 @@ resource "google_container_node_pool" "my-node-pool-np" {
       "blue",
       "green",
     ]
+
     // Protect node metadata
     workload_metadata_config {
       node_metadata = "SECURE"
@@ -231,7 +224,6 @@ resource "google_container_node_pool" "my-node-pool-np" {
       // Explicitly remove GCE legacy metadata API endpoint
       disable-legacy-endpoints = "true"
     }
-
   }
 
   depends_on = [
@@ -244,7 +236,6 @@ resource "google_container_node_pool" "my-other-nodepool-np" {
   location   = var.zones[0]
   cluster    = google_container_cluster.cluster.name
   node_count = "1"
-
 
   max_pods_per_node = 110
 
@@ -265,6 +256,7 @@ resource "google_container_node_pool" "my-other-nodepool-np" {
     image_type      = "COS"
     preemptible     = "false"
     local_ssd_count = 0
+
     // Use the cluster created service account for this node pool
     service_account = google_service_account.gke-sa.email
 
@@ -273,8 +265,6 @@ resource "google_container_node_pool" "my-other-nodepool-np" {
       "https://www.googleapis.com/auth/monitoring",
       "https://www.googleapis.com/auth/trace.append",
     ]
-
-
 
     labels = {
       l1 = "v1"
