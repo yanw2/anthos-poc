@@ -22,4 +22,4 @@ destroy: ## Terraform destroy
 ##@ Operations
 .PHONY: get-credentials
 get-credentials: ## Get GKE cluster login credentials
-	cd ${TF_DIR} && terraform output get_credentials
+	cd ${TF_DIR} && echo $(terraform output get_credentials) && terraform output get_credentials
