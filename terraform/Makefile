@@ -36,6 +36,8 @@ create-tf-sa: ## Create Terraform service account and assign sufficient permissi
 		--role="roles/container.clusterAdmin" \
     --role="roles/container.Admin" \
     --role="roles/storage.objectAdmin"
+	gcloud iam service-accounts keys create ~/.gcp/${PROJECT_ID}.json \
+		--iam-account ${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com
 
 .PHONY: get-credentials
 get-credentials: ## Get GKE cluster login credentials
