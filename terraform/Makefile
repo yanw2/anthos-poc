@@ -55,6 +55,6 @@ check-tf-sa: ## Verify Terraform service account roles
 		--format='table(bindings.role)' \
 		--filter="bindings.members:${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com"
 
-.PHONY: get-credentials
-get-credentials: ## Get GKE cluster login credentials
-	cd ${TF_DIR} && echo $(terraform output get_credentials) && terraform output get_credentials
+.PHONY: ssh-bastion 
+ssh-bastion: ## SSH to bastion server
+	gcloud compute ssh my-cluster-bastion --project ${PROJECT_ID} --zone australia-southeast1-a -- -L8888:127.0.0.1:8888
