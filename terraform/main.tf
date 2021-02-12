@@ -117,9 +117,9 @@ resource "google_container_cluster" "cluster" {
   }
 
   timeouts {
-    create = "30m"
-    update = "30m"
-    delete = "30m"
+    create = "60m"
+    update = "60m"
+    delete = "60m"
   }
 
   depends_on = [
@@ -128,7 +128,6 @@ resource "google_container_cluster" "cluster" {
     google_project_iam_member.service-account-custom,
     google_compute_router_nat.nat,
   ]
-
 }
 
 resource "google_container_node_pool" "my-node-pool-np" {
@@ -192,6 +191,12 @@ resource "google_container_node_pool" "my-node-pool-np" {
       // Explicitly remove GCE legacy metadata API endpoint
       disable-legacy-endpoints = "true"
     }
+  }
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+    delete = "60m"
   }
 
   depends_on = [
@@ -258,6 +263,12 @@ resource "google_container_node_pool" "my-other-nodepool-np" {
       disable-legacy-endpoints = "true"
     }
 
+  }
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+    delete = "60m"
   }
 
   depends_on = [
