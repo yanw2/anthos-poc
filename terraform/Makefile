@@ -16,6 +16,7 @@ plan: ## Terraform plan
 
 .PHONY: apply
 apply: ## Terraform apply
+	gcloud auth activate-service-account --key-file="/Users/wenjing/.gcp/${PROJECT_ID}.json"
 	cd ${TF_DIR} && terraform apply ${TF_OUT}
 
 .PHONY: destroy
@@ -35,7 +36,8 @@ create-tf-sa: ## Create Terraform service account and assign sufficient permissi
 		--member="serviceAccount:${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com" \
 		--role="roles/container.clusterAdmin" \
     --role="roles/container.Admin" \
-    --role="roles/storage.objectAdmin"
+    --role="roles/storage.objectAdmin" \
+    --role="roles/compute.instanceAdmin.v1"
 	gcloud iam service-accounts keys create ~/.gcp/${PROJECT_ID}.json \
 		--iam-account ${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com
 
