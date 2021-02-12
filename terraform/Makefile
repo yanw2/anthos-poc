@@ -12,6 +12,7 @@ init: ## Terraform init
 
 .PHONY: plan
 plan: ## Terraform plan
+	gcloud auth activate-service-account --key-file="/Users/wenjing/.gcp/${PROJECT_ID}.json"
 	cd ${TF_DIR} && terraform plan -out ${TF_OUT}
 
 .PHONY: apply
@@ -34,12 +35,25 @@ create-tf-sa: ## Create Terraform service account and assign sufficient permissi
 	gcloud iam service-accounts create ${TF_SA_ID} --display-name="Terraform default service account"
 	gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 		--member="serviceAccount:${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com" \
-		--role="roles/container.clusterAdmin" \
-    --role="roles/container.Admin" \
-    --role="roles/storage.objectAdmin" \
-    --role="roles/compute.instanceAdmin.v1"
+		--role="roles/compute.instanceAdmin.v1"
+	gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+		--member="serviceAccount:${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com" \
+		--role="roles/storage.objectAdmin"
+	gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+		--member="serviceAccount:${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com" \
+		--role="roles/container.clusterAdmin"
+	gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+		--member="serviceAccount:${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com" \
+		--role="roles/iam.serviceAccountUser"
 	gcloud iam service-accounts keys create ~/.gcp/${PROJECT_ID}.json \
 		--iam-account ${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com
+
+.PHONY: check-tf-sa
+check-tf-sa: ## Verify Terraform service account roles
+	gcloud projects get-iam-policy ${PROJECT_ID} \
+		--flatten="bindings[].members" \
+		--format='table(bindings.role)' \
+		--filter="bindings.members:${TF_SA_ID}@${PROJECT_ID}.iam.gserviceaccount.com"
 
 .PHONY: get-credentials
 get-credentials: ## Get GKE cluster login credentials
